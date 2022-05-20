@@ -11,7 +11,10 @@ const UIInitialState: UIState = {
 
 const UIProvider = ({ children }: PropsWithChildren<{}>) => {
   const [state, dispatch] = useReducer(UIReducer, UIInitialState)
-  return <UIContext.Provider value={{ isSideMenuOpen: false }}>{children}</UIContext.Provider>
+  const openSideMenu = () => dispatch({ type: 'UI - Open Side Bar' })
+  const closeSideMenu = () => dispatch({ type: 'UI - Close Side Bar' })
+
+  return <UIContext.Provider value={{ ...state, openSideMenu, closeSideMenu }}>{children}</UIContext.Provider>
 }
 
 export default UIProvider
