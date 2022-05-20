@@ -1,19 +1,28 @@
-import { createTheme } from "@mui/material"
-import { red } from "@mui/material/colors"
+import { createTheme } from '@mui/material'
+import { red } from '@mui/material/colors'
 
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     secondary: {
-      main: '#19857b'
+      main: '#19857b',
     },
     error: {
-      main: red.A400
-    }
+      main: red.A400,
+    },
   },
   components: {
-
-  }
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0,
+      },
+      styleOverrides: {
+        root: {
+          backgroundColor: '#3f1481',
+        },
+      },
+    },
+  },
 })
 
 export default darkTheme
