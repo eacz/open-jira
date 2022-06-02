@@ -3,16 +3,17 @@ import { Box, Button, TextField } from '@mui/material'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import { EntriesContext } from '../../context/entries'
+import { UIContext } from '../../context/ui'
 
 const NewEntry = () => {
-  const [isAdding, setIsAdding] = useState(false)
   const [inputValue, setInputValue] = useState('')
   const [touch, setTouch] = useState(false)
   const { addNewEntry } = useContext(EntriesContext)
+  const { isAddingNewEntry, setIsAddingEntry } = useContext(UIContext)
   const onTextChange = (event: ChangeEvent<HTMLInputElement>) => setInputValue(event.target.value)
 
   const onCancel = () => {
-    setIsAdding(false)
+    setIsAddingEntry(false)
     setTouch(false)
   }
 
@@ -21,12 +22,12 @@ const NewEntry = () => {
     addNewEntry(inputValue)
     setInputValue('')
     setTouch(false)
-    setIsAdding(false)
+    setIsAddingEntry(false)
   }
 
   return (
     <Box sx={{ marginBottom: 2, paddingX: 2 }}>
-      {isAdding ? (
+      {isAddingNewEntry ? (
         <>
           <TextField
             fullWidth
@@ -51,7 +52,12 @@ const NewEntry = () => {
           </Box>
         </>
       ) : (
-        <Button startIcon={<AddCircleOutlineIcon />} onClick={() => setIsAdding(true)} fullWidth variant='outlined'>
+        <Button
+          startIcon={<AddCircleOutlineIcon />}
+          onClick={() => setIsAddingEntry(true)}
+          fullWidth
+          variant='outlined'
+        >
           Add Task
         </Button>
       )}
