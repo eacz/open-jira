@@ -9,9 +9,9 @@ export interface EntriesState {
 
 const EntriesInitialState: EntriesState = {
   entries: [
-    { _id: uuid(), description: 'description', status: 'pending', createdAt: Date.now() },
-    { _id: uuid(), description: 'description', status: 'in-progress', createdAt: Date.now() - 1000000 },
-    { _id: uuid(), description: 'description', status: 'finished', createdAt: Date.now() - 100000 },
+    { _id: uuid(), description: 'pending', status: 'pending', createdAt: Date.now() },
+    { _id: uuid(), description: 'in-progress', status: 'in-progress', createdAt: Date.now() - 1000000 },
+    { _id: uuid(), description: 'finished', status: 'finished', createdAt: Date.now() - 100000 },
   ],
 }
 
