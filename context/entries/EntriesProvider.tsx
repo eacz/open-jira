@@ -1,33 +1,14 @@
-import { PropsWithChildren, useReducer } from "react"
-import { v4 as uuid } from "uuid"
-import { EntriesContext, EntriesReducer } from "."
-import { Entry } from "../../interfaces"
+import { PropsWithChildren, useReducer } from 'react'
+import { v4 as uuid } from 'uuid'
+import { EntriesContext, EntriesReducer } from '.'
+import { Entry } from '../../interfaces'
 
 export interface EntriesState {
   entries: Entry[]
 }
 
 const EntriesInitialState: EntriesState = {
-  entries: [
-    {
-      _id: uuid(),
-      description: "pending",
-      status: "pending",
-      createdAt: Date.now(),
-    },
-    {
-      _id: uuid(),
-      description: "in-progress",
-      status: "in-progress",
-      createdAt: Date.now() - 1000000,
-    },
-    {
-      _id: uuid(),
-      description: "finished",
-      status: "finished",
-      createdAt: Date.now() - 100000,
-    },
-  ],
+  entries: [],
 }
 
 const EntriesProvider = ({ children }: PropsWithChildren<{}>) => {
@@ -37,13 +18,13 @@ const EntriesProvider = ({ children }: PropsWithChildren<{}>) => {
       description,
       _id: uuid(),
       createdAt: Date.now(),
-      status: "pending",
+      status: 'pending',
     }
-    dispatch({ type: "[Entry] - Add Entry", payload: newEntry })
+    dispatch({ type: '[Entry] - Add Entry', payload: newEntry })
   }
 
   const updateEntry = (entry: Entry) => {
-    dispatch({ type: "[Entry] - Entry updated", payload: entry })
+    dispatch({ type: '[Entry] - Entry updated', payload: entry })
   }
   return (
     <EntriesContext.Provider
@@ -52,7 +33,7 @@ const EntriesProvider = ({ children }: PropsWithChildren<{}>) => {
 
         //Methods
         addNewEntry,
-        updateEntry
+        updateEntry,
       }}
     >
       {children}

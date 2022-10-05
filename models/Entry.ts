@@ -8,7 +8,7 @@ const entrySchema = new Schema({
   createdAt: { type: Number },
   status: {
     type: String,
-    enum: { values: ['pending', 'in-progress', 'finish'], message: '{VALUE} is not a valid status' },
+    enum: { values: ['pending', 'in-progress', 'finished'], message: '{VALUE} is not a valid status' },
   },
 })
 
