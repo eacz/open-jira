@@ -35,7 +35,7 @@ const getEntries = async (res: NextApiResponse<Data>) => {
 const createEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { description } = req.body
 
-  if (!description) return res.status(404).json({ message: "param 'description' should be provided" })
+  if (!description) return res.status(400).json({ message: "param 'description' should be provided" })
 
   try {
     await db.connect()
