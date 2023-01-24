@@ -14,25 +14,49 @@ const EntriesInitialState: EntriesState = {
 
 const EntriesProvider = ({ children }: PropsWithChildren<{}>) => {
   const [state, dispatch] = useReducer(EntriesReducer, EntriesInitialState)
-  
+
   const addNewEntry = async (description: string) => {
     try {
-      const res = await entriesApi.post<{entry: Entry}>('/entries', { description })
+      const res = await entriesApi.post<{ entry: Entry }>('/entries', { description })
       const { entry } = res.data
       dispatch({ type: '[Entry] - Add Entry', payload: entry })
     } catch (error) {
-      
+      //TODO show error with a toast
+      console.log(error)
     }
-
   }
 
-  const updateEntry = (entry: Entry) => {
-    dispatch({ type: '[Entry] - Entry updated', payload: entry })
+  const updateEntry = async ({ _id, status, description }: Entry) => {
+    try {
+      const { data } = await entriesApi.put<{ entry: IEntry }>(`/entries/${_id}`, {
+        status,
+        description,
+      })
+      dispatch({ type: '[Entry] - Entry updated', payload: data.entry })
+    } catch (error) {
+      //TODO show error with a toast
+      console.log(error)
+    }
+  }
+
+  const deleteEntry = async (_id: string) => {
+    try {
+      await entriesApi.delete<{ entry: IEntry }>(`/entries/${_id}`)
+      dispatch({ type: '[Entry] - Delete Entry', payload: _id })
+    } catch (error) {
+      //TODO show error with a toast
+      console.log(error)
+    }
   }
 
   const refreshEntries = async () => {
-    const { data } = await entriesApi.get<{ entries: IEntry[] }>('/entries')
-    dispatch({ type: '[Entry] - Load initial entries', payload: data.entries })
+    try {
+      const { data } = await entriesApi.get<{ entries: IEntry[] }>('/entries')
+      dispatch({ type: '[Entry] - Load initial entries', payload: data.entries })
+    } catch (error) {
+      //TODO show error with a toast
+      console.log(error)
+    }
   }
 
   useEffect(() => {
@@ -47,6 +71,7 @@ const EntriesProvider = ({ children }: PropsWithChildren<{}>) => {
         //Methods
         addNewEntry,
         updateEntry,
+        deleteEntry,
       }}
     >
       {children}
