@@ -9,6 +9,7 @@ const darkTheme = createTheme({
     },
     error: {
       main: red.A400,
+      dark: red.A700,
     },
   },
   components: {
