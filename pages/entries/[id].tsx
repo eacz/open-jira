@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useMemo } from 'react'
+import { ChangeEvent, useState, useMemo, useContext } from 'react'
 import { GetServerSideProps } from 'next'
 import {
   Button,
@@ -22,6 +22,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import { dbEntries } from '../../database'
 import { Layout } from '../../components/layouts'
 import { Entry, EntryStatus } from '../../interfaces'
+import { EntriesContext } from '../../context/entries/EntriesContext'
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished']
 
@@ -33,6 +34,7 @@ const EntryPage = ({ entry }: Props) => {
   const [input, setInput] = useState(entry.description)
   const [status, setStatus] = useState<EntryStatus>(entry.status)
   const [touched, setTouched] = useState(false)
+  const { updateEntry } = useContext(EntriesContext)
 
   const isNotValid = useMemo(() => input.length <= 0 && touched, [input, touched])
 
@@ -40,12 +42,11 @@ const EntryPage = ({ entry }: Props) => {
 
   const onStatusChanged = (event: ChangeEvent<HTMLInputElement>) =>
     setStatus(event.target.value as EntryStatus)
-
+ 
   const onSave = () => {
-    if (touched && !input) {
-      console.log('ERROR')
-    }
-    console.log({ input, status })
+    if (input.trim().length === 0) return
+    const updatedEntry: Entry = { ...entry, status, description: input }
+    updateEntry(updatedEntry, true)
   }
 
   return (
