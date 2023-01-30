@@ -1,4 +1,5 @@
 import { ChangeEvent, useState, useMemo } from 'react'
+import { GetServerSideProps } from 'next'
 import {
   Button,
   Card,
@@ -18,14 +19,19 @@ import {
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
+import { dbEntries } from '../../database'
 import { Layout } from '../../components/layouts'
-import { EntryStatus } from '../../interfaces'
+import { Entry, EntryStatus } from '../../interfaces'
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished']
 
-const EntryPage = () => {
-  const [input, setInput] = useState('')
-  const [status, setStatus] = useState<EntryStatus>('pending')
+interface Props {
+  entry: Entry
+}
+
+const EntryPage = ({ entry }: Props) => {
+  const [input, setInput] = useState(entry.description)
+  const [status, setStatus] = useState<EntryStatus>(entry.status)
   const [touched, setTouched] = useState(false)
 
   const isNotValid = useMemo(() => input.length <= 0 && touched, [input, touched])
@@ -43,11 +49,11 @@ const EntryPage = () => {
   }
 
   return (
-    <Layout title='xd'>
+    <Layout title={input.substring(0, 20) + '...'}>
       <Grid container justifyContent='center' sx={{ marginTop: 2 }}>
         <Grid item xs={12} sm={8} md={6}>
           <Card>
-            <CardHeader title={`Entry ${input}`} subheader={`created at `} />
+            <CardHeader title={`Entry: `} subheader={`created at ${entry.createdAt} `} />
             <CardContent>
               <TextField
                 sx={{ marginTop: 2, marginBottom: 1 }}
@@ -98,6 +104,25 @@ const EntryPage = () => {
       </IconButton>
     </Layout>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const { id } = params as { id: string }
+
+  const entry = await dbEntries.getEntryById(id)
+
+  if (!entry) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: { entry },
+  }
 }
 
 export default EntryPage
