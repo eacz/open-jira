@@ -5,6 +5,7 @@ import { EntriesContext, EntriesReducer } from '.'
 import { Entry } from '../../interfaces'
 import { entriesApi } from '../../api'
 import { IEntry } from '../../models/Entry'
+import { useRouter } from 'next/router'
 
 export interface EntriesState {
   entries: Entry[]
@@ -17,6 +18,7 @@ const EntriesInitialState: EntriesState = {
 const EntriesProvider = ({ children }: PropsWithChildren<{}>) => {
   const [state, dispatch] = useReducer(EntriesReducer, EntriesInitialState)
   const { enqueueSnackbar } = useSnackbar()
+  const router = useRouter()
 
   const addNewEntry = async (description: string) => {
     try {
@@ -53,6 +55,7 @@ const EntriesProvider = ({ children }: PropsWithChildren<{}>) => {
     try {
       await entriesApi.delete<{ entry: IEntry }>(`/entries/${_id}`)
       dispatch({ type: '[Entry] - Delete Entry', payload: _id })
+      router.push('/')
     } catch (error) {
       //TODO show error with a toast
       console.log(error)

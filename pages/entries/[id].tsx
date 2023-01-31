@@ -23,6 +23,7 @@ import { dbEntries } from '../../database'
 import { Layout } from '../../components/layouts'
 import { Entry, EntryStatus } from '../../interfaces'
 import { EntriesContext } from '../../context/entries/EntriesContext'
+import { CustomAlert } from '../../components/ui'
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished']
 
@@ -34,7 +35,8 @@ const EntryPage = ({ entry }: Props) => {
   const [input, setInput] = useState(entry.description)
   const [status, setStatus] = useState<EntryStatus>(entry.status)
   const [touched, setTouched] = useState(false)
-  const { updateEntry } = useContext(EntriesContext)
+  const [openModal, setOpenModal] = useState(false)
+  const { updateEntry, deleteEntry } = useContext(EntriesContext)
 
   const isNotValid = useMemo(() => input.length <= 0 && touched, [input, touched])
 
@@ -42,11 +44,15 @@ const EntryPage = ({ entry }: Props) => {
 
   const onStatusChanged = (event: ChangeEvent<HTMLInputElement>) =>
     setStatus(event.target.value as EntryStatus)
- 
+
   const onSave = () => {
     if (input.trim().length === 0) return
     const updatedEntry: Entry = { ...entry, status, description: input }
     updateEntry(updatedEntry, true)
+  }
+
+  const confirmDelete = async () => {
+    deleteEntry(entry._id)
   }
 
   return (
@@ -100,9 +106,19 @@ const EntryPage = ({ entry }: Props) => {
         </Grid>
       </Grid>
 
-      <IconButton sx={{ position: 'fixed', bottom: 30, right: 30, bgcolor: 'error.dark' }}>
+      <IconButton
+        sx={{ position: 'fixed', bottom: 30, right: 30, bgcolor: 'error.dark' }}
+        onClick={() => setOpenModal(true)}
+      >
         <DeleteOutlineOutlinedIcon />
       </IconButton>
+      <CustomAlert
+        open={openModal}
+        setOpen={setOpenModal}
+        title='Are you sure you want to delete this entry?'
+        description='This action is permanent'
+        onConfirm={confirmDelete}
+      />
     </Layout>
   )
 }
