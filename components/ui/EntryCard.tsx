@@ -6,6 +6,7 @@ import { Entry } from '../../interfaces'
 import { UIContext } from '../../context/ui'
 import { EntriesContext } from '../../context/entries'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { getFormatDistanceFromToNow } from '../../utils/dateFunctions'
 
 interface Props {
   entry: Entry
@@ -39,7 +40,7 @@ const EntryCard = ({ entry }: Props) => {
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: 'space-between', paddingRight: 2 }}>
           <DeleteIcon color='error' fontSize='small' onClick={() => deleteEntry(entry._id)} />
-          <Typography variant='body2'>30 min ago</Typography>
+          <Typography variant='body2'>Created {getFormatDistanceFromToNow(entry.createdAt)} ago</Typography>
         </CardActions>
       </CardActionArea>
     </Card>
